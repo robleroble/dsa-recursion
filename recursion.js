@@ -49,8 +49,7 @@ function findIndex(arr, val, idx = arr.length - 1) {
   if (arr[idx] === val) return idx;
   // Normal Case - remove first item and increment idx
   if (arr.length > 1) {
-    console.log(arr);
-    arr.pop();
+    arr = arr.slice(0, -1);
     return findIndex(arr, val, (idx = idx - 1));
   } else {
     return -1;
@@ -58,16 +57,50 @@ function findIndex(arr, val, idx = arr.length - 1) {
 }
 /** revString: return a copy of a string, but in reverse. */
 
-function revString(str) {}
+function revString(str, revStr = "") {
+  // Base Case - when string has length of 0
+  if (str.length === 0) return revStr;
+  // Normal Case - remove last char from original word, add it to revStr
+  let lastChar = str.slice(-1);
+  revStr = revStr.concat(lastChar);
+  let strMinusLast = str.substring(0, str.length - 1);
+  return revString(strMinusLast, revStr);
+}
 
 /** gatherStrings: given an object, return an array of all of the string values. */
 
-function gatherStrings(obj) {}
+function gatherStrings(obj) {
+  let arr = [];
+  for (let key in obj) {
+    if (typeof obj[key] === "string") {
+      arr.push(obj[key]);
+    } else if (typeof obj[key] === "object") {
+      arr.push(...gatherStrings(obj[key]));
+    }
+  }
+  return arr;
+}
 
 /** binarySearch: given a sorted array of numbers, and a value,
  * return the index of that value (or -1 if val is not present). */
 
-function binarySearch(arr, val) {}
+function binarySearch(arr, val, low = 0, high = arr.length - 1) {
+  // Base Case - if value is not in array
+  if (low > high) return -1;
+  // Normal Case
+  let middleIdx = Math.floor((low + high) / 2);
+  let middleVal = arr[middleIdx];
+
+  if (middleVal === val) {
+    return middleIdx;
+  } else if (middleVal < val) {
+    low = middleIdx + 1;
+    return binarySearch(arr, val, low, high);
+  } else if (middleVal > val) {
+    high = middleIdx - 1;
+    return binarySearch(arr, val, low, high);
+  }
+}
 
 module.exports = {
   product,
